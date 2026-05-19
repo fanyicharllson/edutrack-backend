@@ -1,0 +1,48 @@
+---
+- name: Install all EduTrack dependencies
+  hosts: localhost
+  connection: local
+  become: false
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+
+    - name: Install base packages
+      apt:
+        name:
+          - curl
+          - git
+          - ufw
+          - htop
+          - unzip
+        state: present
+      become: true
+
+    - name: Install Node.js 20
+      shell: |
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+        apt-get install -y nodejs
+      become: true
+
+    - name: Install Docker
+      shell: curl -fsSL https://get.docker.com | sh
+      become: true
+
+    - name: Verify Node.js
+      command: node --version
+      register: node_out
+      ignore_errors: yes
+
+    - name: Verify Docker
+      command: docker --version
+      register: docker_out
+      ignore_errors: yes
+
+    - name: Print versions
+      debug:
+        msg:
+          - "Node: {{ node_out.stdout }}"
+          - "Docker: {{ docker_out.stdout }}"

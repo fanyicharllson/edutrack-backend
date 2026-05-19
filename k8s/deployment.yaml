@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edutrack-api
+  namespace: edutrack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: edutrack-api
+  template:
+    metadata:
+      labels:
+        app: edutrack-api
+    spec:
+      containers:
+        - name: api
+          image: charllson717/edutrack-api:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: edutrack-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: edutrack-secrets
+                  key: JWT_SECRET
+            - name: RESEND_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: edutrack-secrets
+                  key: RESEND_API_KEY

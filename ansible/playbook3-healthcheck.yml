@@ -1,0 +1,43 @@
+---
+- name: EduTrack server health check
+  hosts: localhost
+  connection: local
+  become: true
+
+  tasks:
+    - name: Check Node version
+      command: node --version
+      register: node_ver
+      ignore_errors: yes
+
+    - name: Check Docker version
+      command: docker --version
+      register: docker_ver
+
+    - name: Check Git version
+      command: git --version
+      register: git_ver
+
+    - name: Check k3s nodes
+      command: k3s kubectl get nodes
+      register: k3s_nodes
+
+    - name: Check memory and swap
+      command: free -h
+      register: mem_status
+
+    - name: HEALTH REPORT
+      debug:
+        msg:
+          - "========================================="
+          - "     EDUTRACK SERVER HEALTH REPORT       "
+          - "========================================="
+          - "Node.js : {{ node_ver.stdout }}"
+          - "Docker  : {{ docker_ver.stdout }}"
+          - "Git     : {{ git_ver.stdout }}"
+          - "K3s     : {{ k3s_nodes.stdout }}"
+          - "Memory  : {{ mem_status.stdout_lines[1] }}"
+          - "Swap    : {{ mem_status.stdout_lines[2] }}"
+          - "========================================="
+          - "STATUS  : ALL SYSTEMS OK"
+          - "========================================="

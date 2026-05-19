@@ -1,0 +1,56 @@
+---
+- name: Start services and install k3s
+  hosts: localhost
+  connection: local
+  become: true
+
+  tasks:
+    - name: Start and enable Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verify Docker running
+      command: docker ps
+      register: docker_ps
+
+    - name: Print Docker status
+      debug:
+        msg: "{{ docker_ps.stdout }}"
+
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for k3s ready
+      wait_for:
+        path: /etc/rancher/k3s/k3s.yaml
+        timeout: 60
+
+    - name: Verify k3s nodes
+      command: k3s kubectl get nodes
+      register: k3s_out
+
+    - name: Print k3s status
+      debug:
+        msg: "{{ k3s_out.stdout }}"
+
+    - name: Configure firewall rules
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+      loop:
+        - "22"
+        - "80"
+        - "443"
+        - "8080"
+        - "30080"
+        - "30090"
+        - "30030"
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
