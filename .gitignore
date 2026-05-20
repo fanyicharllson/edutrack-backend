@@ -52,26 +52,3 @@ jest.coverage/
 # Prisma
 prisma/dev.db
 prisma/dev.db-journal
-.prisma/
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Runtime
-.vscode-test/
-.cache/
-
-# Secrets and sensitive files
-*.pem
-*.key
-*.cert
-
-# Node version manager
-.nvmrc
-
-# Local development
-.env.local.backup
-
-/src/generated/prisma

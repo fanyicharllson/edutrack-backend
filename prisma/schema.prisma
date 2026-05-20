@@ -1,25 +1,57 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  password  String
+  role      Role      @default(PARENT)
+  createdAt DateTime  @default(now())
+  student   Student?
+  parentOf  Student[] @relation("ParentStudents")
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+enum Role {
+  PARENT
+  STUDENT
+}
+
+model Student {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  Int
+  parent    User   @relation("ParentStudents", fields: [parentId], references: [id], onDelete: Cascade)
+  wallet    Wallet?
+}
+
+model Wallet {
+  id             Int           @id @default(autoincrement())
+  studentId      Int           @unique
+  student        Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  totalBudget    Float         @default(0)
+  monthlyLimit   Float         @default(0)
+  currentBalance Float         @default(0)
+  transactions   Transaction[]
+}
+
+model Transaction {
+  id          Int       @id @default(autoincrement())
+  walletId    Int
+  wallet      Wallet    @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount      Float
+  type        TxType
+  description String?
+  createdAt   DateTime  @default(now())
+}
+
+enum TxType {
+  DEPOSIT
+  SPEND
 }
