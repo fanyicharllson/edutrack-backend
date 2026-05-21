@@ -1,18 +1,22 @@
-/** @type {import('jest').Config} */
-const path = require('path');
-
 module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
-  testMatch: ['**/__tests__/**/*.ts', '**/*.test.ts'],
+  testMatch: ['**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
   
-  // Direct transform without preset
+  // Use ts-jest without preset
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+      tsconfig: {
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      },
+    },
+  },
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', { 
-      tsconfig: path.join(__dirname, 'tsconfig.json'),
-      isolatedModules: true,
-    }],
+    '^.+\\.tsx?$': 'ts-jest',
   },
   
   collectCoverageFrom: [

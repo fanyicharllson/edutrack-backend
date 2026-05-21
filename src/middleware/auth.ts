@@ -8,9 +8,9 @@ export interface AuthRequest extends Request {
   }
 }
 
-export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction): void {
+export function authMiddleware(req: AuthRequest & { headers: Record<string, string | string[] | undefined> }, res: Response, next: NextFunction): void {
   try {
-    const authHeader = req.headers.authorization
+    const authHeader = req.headers['authorization'] as string | undefined
     if (!authHeader?.startsWith('Bearer ')) {
       res.status(401).json({
         success: false,

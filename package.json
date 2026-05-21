@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "npx -y tsx watch src/server.ts",
-    "test": "npx jest --transform=\"{}\""
+    "test": "npx jest --coverage"
   },
   "repository": {
     "type": "git",
