@@ -30,8 +30,12 @@ const swaggerOptions = {
     },
     servers: [
       {
+        url: 'http://104.248.250.176:30080',
+        description: 'Production server',
+      },
+      {
         url: 'http://localhost:3000',
-        description: 'Development server',
+        description: 'Local development',
       },
     ],
     components: {
@@ -53,7 +57,16 @@ app.get('/health', (req, res) => {
   res.json({ success: true, message: 'EduTrack API is running' })
 })
 
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json')
+  res.send(swaggerSpec)
+})
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  swaggerOptions: {
+    url: 'http://104.248.250.176:30080/api-docs.json',
+  },
+}))
 
 app.get('/metrics', (req, res) => {
   res.set('Content-Type', promRegister.contentType)
