@@ -1,5 +1,6 @@
 import { prisma } from "../../lib/prisma";
 import eventBus from "../../events/eventBus";
+import { generateSpendingInsight } from "../notifications/insightService";
 
 export async function spend(
   userId: number,
@@ -64,7 +65,14 @@ export async function spend(
     student.wallet.monthlyLimit > 0
       ? Math.round((totalSpent / student.wallet.monthlyLimit) * 100)
       : 0;
-  const insight = `You've used ${percentage}% of your monthly limit so far.`;
+  const insight = await generateSpendingInsight(
+    student.user.name,
+    amount,
+    description,
+    wallet.currentBalance,
+    student.wallet.monthlyLimit,
+    totalSpent,
+  );
 
   return { transaction, newBalance: wallet.currentBalance, insight };
 }
