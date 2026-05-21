@@ -27,7 +27,7 @@ import * as txService from "./service";
 export async function spend(req: Request, res: Response) {
   try {
     const { amount, description } = req.body;
-    const userId = (req as any).user.id as number;
+    const userId = (req as any).user.userId as number;
     const result = await txService.spend(userId, Number(amount), description);
     res.json({
       success: true,
@@ -53,7 +53,7 @@ export async function spend(req: Request, res: Response) {
  */
 export async function getBalance(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id as number;
+    const userId = (req as any).user.userId as number;
     const result = await txService.getMyBalance(userId);
     res.json({ success: true, data: result, message: "Balance fetched" });
   } catch (error: any) {
@@ -75,7 +75,7 @@ export async function getBalance(req: Request, res: Response) {
  */
 export async function getTransactions(req: Request, res: Response) {
   try {
-    const userId = (req as any).user.id as number;
+    const userId = (req as any).user.userId as number;
     const result = await txService.getMyTransactions(userId);
     res.json({ success: true, data: result, message: "Transactions fetched" });
   } catch (error: any) {

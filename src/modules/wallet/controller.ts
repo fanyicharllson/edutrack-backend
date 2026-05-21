@@ -29,7 +29,7 @@ import * as walletService from './service'
 export async function deposit(req: Request, res: Response) {
   try {
     const { studentId, amount, description } = req.body
-    const parentId = (req as any).user.id as number
+    const parentId = (req as any).user.userId as number
     const result = await walletService.deposit(parentId, Number(studentId), Number(amount), description)
     res.json({ success: true, data: result, message: 'Deposit successful' })
   } catch (error: any) {
@@ -63,7 +63,7 @@ export async function deposit(req: Request, res: Response) {
 export async function setLimit(req: Request, res: Response) {
   try {
     const { studentId, monthlyLimit } = req.body
-    const parentId = (req as any).user.id as number
+    const parentId = (req as any).user.userId as number
     const result = await walletService.setLimit(parentId, Number(studentId), Number(monthlyLimit))
     res.json({ success: true, data: result, message: 'Monthly limit updated' })
   } catch (error: any) {
@@ -92,7 +92,7 @@ export async function setLimit(req: Request, res: Response) {
 export async function getStudentTransactions(req: Request, res: Response) {
   try {
     const { studentId } = req.params
-    const parentId = (req as any).user.id as number
+    const parentId = (req as any).user.userId as number
     const result = await walletService.getStudentTransactions(parentId, Number(studentId))
     res.json({ success: true, data: result, message: 'Transactions fetched' })
   } catch (error: any) {

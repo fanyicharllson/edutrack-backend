@@ -25,7 +25,7 @@ import * as userService from './service'
 export async function linkStudent(req: Request, res: Response) {
   try {
     const { studentEmail } = req.body
-    const parentId = (req as any).user.id as number
+    const parentId = (req as any).user.userId as number
     const student = await userService.linkStudent(parentId, studentEmail)
     res.json({ success: true, data: { student }, message: 'Student linked successfully' })
   } catch (error: any) {
@@ -47,7 +47,7 @@ export async function linkStudent(req: Request, res: Response) {
  */
 export async function getMyStudents(req: Request, res: Response) {
   try {
-    const parentId = (req as any).user.id as number
+    const parentId = (req as any).user.userId as number
     const students = await userService.getMyStudents(parentId)
     res.json({ success: true, data: { students }, message: 'Students fetched' })
   } catch (error: any) {
