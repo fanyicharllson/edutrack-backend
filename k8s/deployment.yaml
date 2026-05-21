@@ -34,3 +34,14 @@ spec:
                 secretKeyRef:
                   name: edutrack-secrets
                   key: RESEND_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: edutrack-secrets
+                  key: GEMINI_API_KEY
+            - name: JWT_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: edutrack-secrets
+                  key: JWT_REFRESH_SECRET      
+                  
