@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "npx -y tsx watch src/server.ts",
-    "test": "npx jest --coverage"
+    "test": "cross-env NODE_ENV=test npx jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "cross-env": "^10.1.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.14",
     "prisma": "^7.8.0",
