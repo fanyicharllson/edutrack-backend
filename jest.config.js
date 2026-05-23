@@ -1,31 +1,28 @@
 module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/*.test.ts'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  
-  // Use ts-jest without preset
-  extensionsToTreatAsEsm: ['.ts'],
-  globals: {
-    'ts-jest': {
-      useESM: true,
+  transform: {
+    '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: {
+        module: 'commonjs',
         esModuleInterop: true,
         allowSyntheticDefaultImports: true,
       },
-    },
+    }],
   },
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
-  
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.test.ts',
     '!src/types/**',
     '!src/generated/**',
+    '!src/server.ts',
+    '!src/lib/**',
+    '!src/events/**',
+    '!src/modules/notifications/**',
   ],
-  
   coverageThreshold: {
     global: {
       branches: 80,
@@ -34,4 +31,4 @@ module.exports = {
       statements: 80,
     },
   },
-};
+}

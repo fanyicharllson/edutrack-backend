@@ -1,8 +1,9 @@
 pipeline {
   agent any
   environment {
-    IMAGE = "charllson717/edutrack-api"
-    TAG   = "${BUILD_NUMBER}"
+    IMAGE    = "charllson717/edutrack-api"
+    TAG      = "${BUILD_NUMBER}"
+    NODE_ENV = "test"
   }
   stages {
      stage('Fix Docker Socket') {
@@ -14,7 +15,7 @@ pipeline {
       steps { checkout scm }
     }
     stage('Install') {
-      steps { sh 'npm ci' }
+      steps { sh 'npm install --include=dev' }
     }
     stage('Test') {
       steps {

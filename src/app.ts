@@ -18,7 +18,7 @@ app.use(
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
     crossOriginOpenerPolicy: false,
-  })
+  }),
 );
 app.use(cors());
 app.use(express.json());
@@ -66,16 +66,19 @@ app.get("/health", (req, res) => {
   res.json({ success: true, message: "EduTrack API is running" });
 });
 
-const BASE_URL = 'http://104.248.250.176:30080'
+const BASE_URL = "http://104.248.250.176:30080";
 
 app.use("/api/docs", swaggerUi.serve);
-app.get("/api/docs", swaggerUi.setup(swaggerSpec, {
-  customCssUrl: `${BASE_URL}/api/docs/swagger-ui.css`,
-  customJs: [
-    `${BASE_URL}/api/docs/swagger-ui-bundle.js`,
-    `${BASE_URL}/api/docs/swagger-ui-standalone-preset.js`,
-  ],
-}));
+app.get(
+  "/api/docs",
+  swaggerUi.setup(swaggerSpec, {
+    customCssUrl: `${BASE_URL}/api/docs/swagger-ui.css`,
+    customJs: [
+      `${BASE_URL}/api/docs/swagger-ui-bundle.js`,
+      `${BASE_URL}/api/docs/swagger-ui-standalone-preset.js`,
+    ],
+  }),
+);
 
 app.get("/metrics", (req, res) => {
   res.set("Content-Type", promRegister.contentType);
