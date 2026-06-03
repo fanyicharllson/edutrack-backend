@@ -22,9 +22,10 @@ pipeline {
         sh 'npm test -- --passWithNoTests --ci || true'
       }
     }
-    stage('Build Image') {
+        stage('Build Image') {
       steps {
-        sh "docker build -t ${IMAGE}:${TAG} ."
+        // Tag with BOTH the build number and latest for fallback safety
+        sh "docker build -t ${IMAGE}:${TAG} -t ${IMAGE}:latest ."
       }
     }
     stage('Push to Docker Hub') {
@@ -34,21 +35,32 @@ pipeline {
           usernameVariable: 'DOCKER_USER',
           passwordVariable: 'DOCKER_PASS'
         )]) {
-          sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+          // Keep this so your Docker Hub stays updated as a backup registry
+          sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
           sh "docker push ${IMAGE}:${TAG}"
+          sh "docker push ${IMAGE}:latest"
         }
+      }
+    }
+    stage('Sideload to K3s Cache') {
+      steps {
+        // Save the image to a local file and import it directly into K3s locally
+        sh """
+          docker save -o edutrack-tmp.tar ${IMAGE}:${TAG}
+          k3s ctr images import edutrack-tmp.tar
+          rm edutrack-tmp.tar
+        """
       }
     }
     stage('Deploy to k8s') {
       steps {
         sh """
-          kubectl set image deployment/edutrack-api \
-            api=${IMAGE}:${TAG} \
-            -n edutrack
-          kubectl rollout status deployment/edutrack-api -n edutrack
+          k3s kubectl set image deployment/edutrack-api api=${IMAGE}:${TAG} -n edutrack
+          k3s kubectl rollout restart deployment/edutrack-api -n edutrack
         """
       }
     }
+
   }
   post {
     always { cleanWs() }

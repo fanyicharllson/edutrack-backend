@@ -16,6 +16,7 @@ spec:
       containers:
         - name: api
           image: charllson717/edutrack-api:latest
+          imagePullPolicy: IfNotPresent 
           ports:
             - containerPort: 3000
           env:
