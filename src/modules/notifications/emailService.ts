@@ -34,7 +34,7 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
 export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
   const html = `
     <h1>Welcome to EduTrack, ${name}!</h1>
-    <p>Thank you for registering with EduTrack, your personal finance tracker.</p>
+    <p>Hey, Thank you for registering with EduTrack, your personal finance tracker.</p>
     <p>You can now:</p>
     <ul>
       <li>Track your expenses</li>
