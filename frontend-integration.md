@@ -11,8 +11,8 @@ EduTrack is a student finance tracker. Parents deposit money for students, set m
 ## Base URL
 ```
 Local:      http://localhost:3000/api/v1
-Production: http://104.248.250.176:30080/api/v1
-Swagger UI: http://104.248.250.176:30080/api/docs
+Production: http://165.227.149.115:30080/api/v1
+Swagger UI: http://165.227.149.115:30080/api/docs
 ```
 
 ---
@@ -317,8 +317,8 @@ All errors:
 ```
 Build a React Native (Expo) frontend for EduTrack — a student finance tracker app.
 
-Base API URL: http://104.248.250.176:30080/api/v1
-Swagger docs: http://104.248.250.176:30080/api/docs
+Base API URL: http://165.227.149.115:30080/api/v1
+Swagger docs: http://165.227.149.115:30080/api/docs
 
 Two roles: PARENT and STUDENT.
 After login check user.role and route to the correct dashboard.

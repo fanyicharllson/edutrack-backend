@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
-import { register as promRegister, collectDefaultMetrics } from "prom-client";
+import { register, metricsMiddleware } from "./metrics";
 import authRoutes from "./modules/auth/routes";
 import userRoutes from "./modules/users/routes";
 import walletRoutes from "./modules/wallet/routes";
@@ -26,8 +26,8 @@ app.use(express.json());
 // Initialize notification listeners
 initializeNotificationListeners();
 
-// Prometheus metrics
-collectDefaultMetrics();
+// Apply metrics middleware
+app.use(metricsMiddleware);
 
 const swaggerOptions = {
   definition: {
@@ -39,7 +39,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://104.248.250.176:30080",
+        url: "http://165.227.149.115:30080",
         description: "Production server",
       },
       {
@@ -66,7 +66,7 @@ app.get("/health", (req, res) => {
   res.json({ success: true, message: "EduTrack API is running" });
 });
 
-const BASE_URL = "http://104.248.250.176:30080";
+const BASE_URL = "http://165.227.149.115:30080";
 
 app.use("/api/docs", swaggerUi.serve);
 app.get(
@@ -80,9 +80,10 @@ app.get(
   }),
 );
 
-app.get("/metrics", (req, res) => {
-  res.set("Content-Type", promRegister.contentType);
-  res.end(promRegister.metrics());
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
+  const metrics = await register.metrics();
+  res.end(metrics);
 });
 
 // Routes
