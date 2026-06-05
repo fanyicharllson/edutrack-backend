@@ -42,29 +42,18 @@ pipeline {
         }
       }
     }
-    stage('Sideload to K3s Cache') {
-      steps {
-        // Save the image to a local file and import it directly into K3s locally
-        sh """
-          docker save -o edutrack-tmp.tar ${IMAGE}:${TAG}
-          k3s ctr images import edutrack-tmp.tar
-          rm edutrack-tmp.tar
-        """
-      }
-    }
     stage('Deploy to k8s') {
-      steps {
-        sh """
-          k3s kubectl set image deployment/edutrack-api api=${IMAGE}:${TAG} -n edutrack
-          k3s kubectl rollout restart deployment/edutrack-api -n edutrack
-        """
-      }
-    }
-
+  steps {
+    sh """
+      kubectl set image deployment/edutrack-api api=${IMAGE}:${TAG} -n edutrack
+      kubectl rollout restart deployment/edutrack-api -n edutrack
+    """
+  }
+}
   }
   post {
     always { cleanWs() }
-    success { echo 'Deployed successfully!' }
+    success { echo 'Hey Grista! Congratulations! Your app deployed successfully on k8s!' }
     failure { echo 'Build failed!' }
   }
 }
